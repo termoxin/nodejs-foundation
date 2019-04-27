@@ -78,7 +78,7 @@ server.requestHandler = (req, res) => {
         payload =
           typeof payload === "string" && typeof payload !== "undefined"
             ? payload
-            : "";
+            : JSON.stringify(payload);
 
         contentType = typeof contentType === "string" ? contentType : "json";
 

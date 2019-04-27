@@ -1,6 +1,6 @@
 // Dependencies
-const path = require("path");
 const helpers = require("./helpers");
+const _data = require("./data");
 
 // Handlers initialization
 let handlers = {};
