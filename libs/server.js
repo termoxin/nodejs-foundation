@@ -115,7 +115,8 @@ server.notFound = (_, callback) => {
 
 server.router = {
   index: handlers.index,
-  public: handlers.public
+  public: handlers.public,
+  "api/tokens": handlers.tokens
 };
 
 module.exports = server;

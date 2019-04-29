@@ -79,6 +79,23 @@ helpers.getAssetsData = (fileName, callback) => {
   });
 };
 
+helpers.getRandomInt = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+
+helpers.getRandomStr = length => {
+  const chars = "1234567890abcdefghijklmnopqrstuvwxyz".split("");
+  let str = "";
+
+  for (let i = 0; i < length; i++) {
+    str += chars[helpers.getRandomInt(0, chars.length)];
+  }
+
+  return str;
+};
+
 helpers.parseJSONtoObject = json => {
   try {
     return JSON.parse(json);
