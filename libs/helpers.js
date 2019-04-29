@@ -87,4 +87,25 @@ helpers.parseJSONtoObject = json => {
   }
 };
 
+// TODO:Parsing this function
+
+helpers.deleteFolderRecursive = (path, callback) => {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach((file, index) => {
+      var curPath = path + "/" + file;
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // recurse
+        deleteFolderRecursive(curPath);
+      } else {
+        // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+    callback(false);
+  } else {
+    callback("The database is not created yet.");
+  }
+};
+
 module.exports = helpers;
