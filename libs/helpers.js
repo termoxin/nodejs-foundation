@@ -108,4 +108,23 @@ helpers.deleteFolderRecursive = (path, callback) => {
   }
 };
 
+helpers.paintText = (text, color = "green") => {
+  const availableColors = {
+    black: 30,
+    red: 31,
+    green: 32,
+    yellow: 33,
+    blue: 34,
+    magenta: 35,
+    cyan: 36,
+    white: 37
+  };
+
+  color = availableColors.hasOwnProperty(color)
+    ? availableColors[color]
+    : availableColors["green"];
+
+  return `\x1b[${color}m` + text + "\x1b[0m";
+};
+
 module.exports = helpers;

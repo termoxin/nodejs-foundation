@@ -36,7 +36,7 @@ cli.responders.help = () => {
   for (let key in commands) {
     if (commands.hasOwnProperty(key)) {
       let line = "";
-      let command = "      \x1b[33m " + key + "      \x1b[0m";
+      let command = helpers.paintText("     " + key, "yellow");
 
       line += command;
       let padding = 60 - line.length;
@@ -64,10 +64,17 @@ cli.responders.databaseCreate = str => {
   if (typeof dbName !== "undefined") {
     fs.mkdir(`${cli.baseDir}/${dbName}`, err => {
       if (!err || err.code !== "EEXIST") {
-        console.log(`The database ${dbName} was created successfully.`);
+        console.log(
+          helpers.paintText(`The database ${dbName} was created successfully.`)
+        );
         cli.verticalSpace();
       } else {
-        console.log("The database with this name already exists.");
+        console.log(
+          helpers.paintText(
+            "The database with this name already exists.",
+            "red"
+          )
+        );
       }
     });
   } else {
@@ -80,9 +87,13 @@ cli.responders.databaseDelete = str => {
 
   helpers.deleteFolderRecursive(`${cli.baseDir}/${dbName}`, err => {
     if (!err) {
-      console.log(`The database ${dbName} was deleted succesfully.`);
+      console.log(
+        helpers.paintText(`The database ${dbName} was deleted succesfully.`)
+      );
     } else {
-      console.log(err);
+      console.log(
+        helpers.paintText(`The database ${dbName} does not exist yet.`, "red")
+      );
     }
   });
 };
@@ -92,9 +103,18 @@ cli.responders.templateCreate = str => {
 
   fs.open(`${cli.baseTemplateDir}/${templateName}.html`, "wx+", err => {
     if (!err || err.code !== "EEXIST") {
-      console.log(`The template ${templateName}.html was created succesfully.`);
+      console.log(
+        helpers.paintText(
+          `The template ${templateName}.html was created succesfully.`
+        )
+      );
     } else {
-      console.log(`The template ${templateName}.html already exists.`);
+      console.log(
+        helpers.paintText(
+          `The template ${templateName}.html already exists.`,
+          "red"
+        )
+      );
     }
   });
 };
