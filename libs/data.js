@@ -17,7 +17,9 @@ _data.read = (collection, name, callback) => {
       data = helpers.parseJSONtoObject(data);
       callback(false, data);
     } else {
-      callback("Could not read the fie because it doesn't exist yet.");
+      callback({
+        error: "Could not read the flie because it doesn't exist yet."
+      });
     }
   });
 };
@@ -37,15 +39,15 @@ _data.create = (collection, name, payload, callback) => {
               if (!err) {
                 callback(false);
               } else {
-                callback("Could not close the file.");
+                callback({ error: "Could not close the file." });
               }
             });
           } else {
-            callback("Could not write the file.");
+            callback({ error: "Could not write the file." });
           }
         });
       } else {
-        callback("Could not create because it already exists.");
+        callback({ error: "Could not create because it already exists." });
       }
     }
   );
@@ -53,8 +55,6 @@ _data.create = (collection, name, payload, callback) => {
 
 // data.update serves to update an existed record on an existed collection in .data
 _data.update = (collection, name, payload, callback) => {
-  const payloadObject = JSON.stringify(payload);
-
   fs.readFile(`${_data.baseDir}/${collection}/${name}.json`, (err, data) => {
     if (!err && data) {
       const dataWaitingFor = helpers.parseJSONtoObject(data.toString());
@@ -69,12 +69,12 @@ _data.update = (collection, name, payload, callback) => {
           if (!err) {
             callback(false, updatedData);
           } else {
-            callback("Could not write the file.");
+            callback({ error: "Could not write the file." });
           }
         }
       );
     } else {
-      callback("Could not create because it already exists.");
+      callback({ error: "Could not create because it already exists." });
     }
   });
 };
@@ -84,7 +84,9 @@ _data.delete = (collection, name, callback) => {
     if (!err) {
       callback(false);
     } else {
-      callback("Could not delete the file, probably it does not exist yet.");
+      callback({
+        error: "Could not delete the file, probably it does not exist yet."
+      });
     }
   });
 };
@@ -95,7 +97,7 @@ _data.list = (collection, callback) => {
       const trimmedPath = files.map(file => file.replace(".json", ""));
       callback(false, trimmedPath);
     } else {
-      callback("The collection does not exist yet.");
+      callback({ error: "The collection does not exist yet." });
     }
   });
 };
