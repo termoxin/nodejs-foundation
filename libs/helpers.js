@@ -1,5 +1,8 @@
+// Dependencies
+
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 let helpers = {};
 
@@ -142,6 +145,13 @@ helpers.paintText = (text, color = "green") => {
     : availableColors["green"];
 
   return `\x1b[${color}m` + text + "\x1b[0m";
+};
+
+helpers.hash = (str, alg = "md5") => {
+  return crypto
+    .createHash(alg)
+    .update(str)
+    .digest("hex");
 };
 
 module.exports = helpers;

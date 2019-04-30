@@ -17,10 +17,7 @@ users.post = (data, callback) => {
   password = password && password.trim().length >= 6 ? password : false;
 
   if (username && firstName && lastName && password) {
-    const hash = crypto
-      .createHash("md5")
-      .update(username)
-      .digest("hex");
+    const hash = helpers.hash(password);
 
     const id = helpers.getRandomStr(20);
 
