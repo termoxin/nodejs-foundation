@@ -104,12 +104,12 @@ _data.list = (collection, callback) => {
 
 _data.isExist = (collection, id, callback) => {
   _data.read(collection, id, (err, data) => {
-    if(!err && data) {
+    if (!err && data) {
       callback(true);
     } else {
-      callback(false)
+      callback(false);
     }
-  })
+  });
 };
 
 module.exports = _data;

@@ -32,11 +32,17 @@ users.post = (data, callback) => {
       password: hash
     };
 
-    _data.create("users", username, data, err => {
-      if (!err) {
-        callback(201, { status: "OK" });
+    _data.isExist("users", username, isExist => {
+      if (!isExist) {
+        _data.create("users", username, data, err => {
+          if (!err) {
+            callback(201, { status: "OK" });
+          } else {
+            callback(434, err);
+          }
+        });
       } else {
-        callback(434, err);
+        callback(434, { error: "This user already exists." });
       }
     });
   } else {
