@@ -11,8 +11,8 @@ let _data = {};
 
 _data.baseDir = path.join(__dirname, "/../.data");
 
-_data.read = (collection, name, callback) => {
-  fs.readFile(`${_data.baseDir}/${collection}/${name}.json`, (err, data) => {
+_data.read = (collection, id, callback) => {
+  fs.readFile(`${_data.baseDir}/${collection}/${id}.json`, (err, data) => {
     if (!err && data) {
       data = helpers.parseJSONtoObject(data);
       callback(false, data);
@@ -25,11 +25,11 @@ _data.read = (collection, name, callback) => {
 };
 
 // data.create creates a new record or a collection in .data
-_data.create = (collection, name, payload, callback) => {
+_data.create = (collection, id, payload, callback) => {
   const payloadObject = JSON.stringify(payload);
 
   fs.open(
-    `${_data.baseDir}/${collection}/${name}.json`,
+    `${_data.baseDir}/${collection}/${id}.json`,
     "wx+",
     (err, fileDescriptor) => {
       if (!err && fileDescriptor) {
@@ -54,8 +54,8 @@ _data.create = (collection, name, payload, callback) => {
 };
 
 // data.update serves to update an existed record on an existed collection in .data
-_data.update = (collection, name, payload, callback) => {
-  fs.readFile(`${_data.baseDir}/${collection}/${name}.json`, (err, data) => {
+_data.update = (collection, id, payload, callback) => {
+  fs.readFile(`${_data.baseDir}/${collection}/${id}.json`, (err, data) => {
     if (!err && data) {
       const dataWaitingFor = helpers.parseJSONtoObject(data.toString());
       let updatedData = { ...dataWaitingFor, ...payload };
@@ -63,7 +63,7 @@ _data.update = (collection, name, payload, callback) => {
       updatedData = JSON.stringify(updatedData);
 
       fs.writeFile(
-        `${_data.baseDir}/${collection}/${name}.json`,
+        `${_data.baseDir}/${collection}/${id}.json`,
         updatedData,
         err => {
           if (!err) {
@@ -79,8 +79,8 @@ _data.update = (collection, name, payload, callback) => {
   });
 };
 
-_data.delete = (collection, name, callback) => {
-  fs.unlink(`${_data.baseDir}/${collection}/${name}.json`, err => {
+_data.delete = (collection, id, callback) => {
+  fs.unlink(`${_data.baseDir}/${collection}/${id}.json`, err => {
     if (!err) {
       callback(false);
     } else {
@@ -100,6 +100,16 @@ _data.list = (collection, callback) => {
       callback({ error: "The collection does not exist yet." });
     }
   });
+};
+
+_data.isExist = (collection, id, callback) => {
+  _data.read(collection, id, (err, data) => {
+    if(!err && data) {
+      callback(true);
+    } else {
+      callback(false)
+    }
+  })
 };
 
 module.exports = _data;

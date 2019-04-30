@@ -5,9 +5,11 @@
 
 // Dependencies
 const tokens = require("./tokens");
+const users = require("./users");
 
 let api = {
-  tokens
+  tokens,
+  users
 };
 
 module.exports = api;
