@@ -160,9 +160,8 @@ helpers.verifyToken = (token, callback) => {
   if (token) {
     _data.read("tokens", token, (err, data) => {
       if (!err && data) {
-        console.log(data.date > +new Date());
         if (data.date > +new Date()) {
-          callback(200);
+          callback(200, false);
         } else {
           callback(400, { error: "The token is expired." });
         }

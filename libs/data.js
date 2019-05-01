@@ -57,7 +57,7 @@ _data.create = (collection, id, payload, callback) => {
 _data.update = (collection, id, payload, callback) => {
   fs.readFile(`${_data.baseDir}/${collection}/${id}.json`, (err, data) => {
     if (!err && data) {
-      const dataWaitingFor = helpers.parseJSONtoObject(data.toString());
+      const dataWaitingFor = JSON.parse(data.toString());
       let updatedData = { ...dataWaitingFor, ...payload };
 
       updatedData = JSON.stringify(updatedData);
@@ -74,7 +74,7 @@ _data.update = (collection, id, payload, callback) => {
         }
       );
     } else {
-      callback({ error: "Could not create because it already exists." });
+      callback({ error: "Could not update because it does not exist yet." });
     }
   });
 };
@@ -102,7 +102,7 @@ _data.list = (collection, callback) => {
   });
 };
 
-_data.isExist = (collection, id, callback) => {
+_data.isExists = (collection, id, callback) => {
   _data.read(collection, id, (err, data) => {
     if (!err && data) {
       callback(true);
@@ -110,6 +110,20 @@ _data.isExist = (collection, id, callback) => {
       callback(false);
     }
   });
+};
+
+_data.rename = (collection, id, newName, callback) => {
+  fs.rename(
+    `${_data.baseDir}/${collection}/${id}.json`,
+    `${_data.baseDir}/${collection}/${newName}.json`,
+    err => {
+      if (!err) {
+        callback(false);
+      } else {
+        callback({ error: "Could not change the file name." });
+      }
+    }
+  );
 };
 
 module.exports = _data;

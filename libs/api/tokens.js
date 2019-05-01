@@ -40,7 +40,7 @@ tokens.post = (data, callback) => {
         const data = {
           id,
           username,
-          date: +new Date()
+          date: +new Date() + 1000 * 60 * 60
         };
 
         _data.create("tokens", id, data, err => {

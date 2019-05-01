@@ -14,8 +14,8 @@ users.get = (data, callback) => {
   let { token } = data.headers;
 
   if (username.trim().length >= 3 && token) {
-    _data.isExist("users", username, isExist => {
-      if (isExist) {
+    _data.isExists("users", username, isExists => {
+      if (isExists) {
         _data.read("users", username, (err, userData) => {
           if (!err && data) {
             helpers.verifyToken(token, (statusCode, data) => {
@@ -55,8 +55,8 @@ users.post = (data, callback) => {
       password: hash
     };
 
-    _data.isExist("users", username, isExist => {
-      if (!isExist) {
+    _data.isExists("users", username, isExists => {
+      if (!isExists) {
         _data.create("users", username, data, err => {
           if (!err) {
             callback(201, { status: "OK" });
@@ -71,6 +71,91 @@ users.post = (data, callback) => {
   } else {
     callback(434, { error: "Some fields are invalid or empty." });
   }
+};
+
+users.put = (data, callback) => {
+  let preparedForUpdate = {};
+  let { username, newUserName, lastName, firstName, password } = data.body;
+
+  helpers.verifyToken(data.headers.token, (statusCode, err) => {
+    if (!err && statusCode === 200) {
+      if (password) {
+        preparedForUpdate.password = helpers.hash(password);
+      }
+
+      if (lastName) {
+        preparedForUpdate.lastName = lastName;
+      }
+      if (firstName) {
+        preparedForUpdate.firstName = firstName;
+      }
+
+      if (!username) {
+        callback(400, { error: "The username was missed." });
+      }
+
+      if (newUserName) {
+        _data.isExists("users", newUserName, isExists => {
+          if (!isExists) {
+            preparedForUpdate.username = newUserName;
+          } else {
+            callback(434, { error: "The user already exists." });
+          }
+        });
+      }
+
+      if (!!Object.keys(preparedForUpdate).length) {
+        _data.update("users", username, preparedForUpdate, (err, data) => {
+          if (!err && data) {
+            delete data.password;
+
+            _data.rename("users", username, newUserName, err => {
+              if (!err) {
+                callback(200);
+              } else {
+                callback(500);
+              }
+            });
+
+            callback(202, data);
+          } else {
+            callback(500, err);
+          }
+        });
+      } else {
+        callback(500, {
+          error: "The fields are empty, enter something, please."
+        });
+      }
+    } else {
+      callback(500, { error: "Invalid token." });
+    }
+  });
+};
+
+users.delete = (data, callback) => {
+  const { username } = data.queryObject;
+  const { token } = data.headers;
+
+  helpers.verifyToken(token, (_, err) => {
+    if (!err) {
+      _data.isExists("users", username, isExists => {
+        if (isExists) {
+          _data.delete("users", username, err => {
+            if (!err) {
+              callback(204);
+            } else {
+              callback(500, { error: "Could not delete the user." });
+            }
+          });
+        } else {
+          callback(404, { error: "The user does not exist." });
+        }
+      });
+    } else {
+      callback(500, err);
+    }
+  });
 };
 
 module.exports = users;
