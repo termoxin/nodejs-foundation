@@ -1,6 +1,5 @@
 // Dependencies
 const helpers = require("./helpers");
-const _data = require("./data");
 const _api = require("./api/");
 
 // Handlers initialization

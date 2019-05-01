@@ -4,11 +4,37 @@
  */
 
 // Dependencies
-const crypto = require("crypto");
 const _data = require("../data");
 const helpers = require("../helpers");
 
 let users = {};
+
+users.get = (data, callback) => {
+  let { username } = data.queryObject;
+  let { token } = data.headers;
+
+  if (username.trim().length >= 3 && token) {
+    _data.isExist("users", username, isExist => {
+      if (isExist) {
+        _data.read("users", username, (err, userData) => {
+          if (!err && data) {
+            helpers.verifyToken(token, (statusCode, data) => {
+              if (statusCode === 200) {
+                delete userData.password;
+
+                callback(200, userData);
+              } else {
+                callback(statusCode, data);
+              }
+            });
+          }
+        });
+      } else {
+        callback(404, { error: "The user does not exist yet." });
+      }
+    });
+  }
+};
 
 users.post = (data, callback) => {
   let { username, firstName, lastName, password } = data.body;

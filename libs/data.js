@@ -14,7 +14,7 @@ _data.baseDir = path.join(__dirname, "/../.data");
 _data.read = (collection, id, callback) => {
   fs.readFile(`${_data.baseDir}/${collection}/${id}.json`, (err, data) => {
     if (!err && data) {
-      data = helpers.parseJSONtoObject(data);
+      data = JSON.parse(data);
       callback(false, data);
     } else {
       callback({

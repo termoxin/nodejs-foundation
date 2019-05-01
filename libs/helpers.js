@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const _data = require("./data");
 
 let helpers = {};
 
@@ -85,6 +86,7 @@ helpers.getAssetsData = (fileName, callback) => {
 helpers.getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
+
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
@@ -152,6 +154,25 @@ helpers.hash = (str, alg = "md5") => {
     .createHash(alg)
     .update(str)
     .digest("hex");
+};
+
+helpers.verifyToken = (token, callback) => {
+  if (token) {
+    _data.read("tokens", token, (err, data) => {
+      if (!err && data) {
+        console.log(data.date > +new Date());
+        if (data.date > +new Date()) {
+          callback(200);
+        } else {
+          callback(400, { error: "The token is expired." });
+        }
+      } else {
+        callback(404, { error: "The token does not exist." });
+      }
+    });
+  } else {
+    callback({ error: "The username or token are invalid or empty." });
+  }
 };
 
 module.exports = helpers;
