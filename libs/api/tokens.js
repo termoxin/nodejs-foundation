@@ -8,7 +8,7 @@ const _data = require("../data");
 
 let tokens = {};
 
-tokens.get = (data, callback) => {
+tokens.getToken = (data, callback) => {
   const { token } = data.queryObject;
 
   if (token && token.length === 20) {
@@ -26,7 +26,7 @@ tokens.get = (data, callback) => {
   }
 };
 
-tokens.post = (data, callback) => {
+tokens.createToken = (data, callback) => {
   let { username, password } = data.body;
 
   username = username && username.trim().length > 3 ? username : false;
@@ -57,7 +57,7 @@ tokens.post = (data, callback) => {
   }
 };
 
-tokens.put = (data, callback) => {
+tokens.updateToken = (data, callback) => {
   const tokenId = data.body.token;
   const newDate = +new Date() + 1000 * 60 * 60;
 
@@ -70,7 +70,7 @@ tokens.put = (data, callback) => {
   });
 };
 
-tokens.delete = (data, callback) => {
+tokens.deleteToken = (data, callback) => {
   const { token } = data.queryObject;
 
   if (token && token.length === 20) {

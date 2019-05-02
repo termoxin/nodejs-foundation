@@ -7,7 +7,7 @@ let handlers = { ..._api };
 
 handlers.index = {};
 
-handlers.index.get = (data, callback) => {
+handlers.index = (data, callback) => {
   const payload = { title: "Index", description: "This is description" };
 
   helpers.addUniversalTemplate("index", payload, (err, data) => {

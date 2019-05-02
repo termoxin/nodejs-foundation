@@ -7,6 +7,8 @@ const debug = util.debuglog("server");
 const config = require("./config");
 const handlers = require("./handlers");
 const helpers = require("./helpers");
+const router = require("./router");
+const routes = require("./routes");
 
 let server = {};
 
@@ -64,10 +66,12 @@ server.requestHandler = (req, res) => {
 
     if (availableMethods.indexOf(method) > -1) {
       let chosenHandler =
-        server.router.hasOwnProperty(pathname) &&
-        server.router[pathname].hasOwnProperty(method)
-          ? server.router[pathname][method]
+        router.routes.hasOwnProperty(method) &&
+        router.routes[method].hasOwnProperty(pathname)
+          ? router.routes[method][pathname]
           : server.notFound;
+
+      console.log();
 
       chosenHandler =
         address.pathname.indexOf("/public") > -1
@@ -112,6 +116,8 @@ server.init = () => {
 server.notFound = (_, callback) => {
   callback(404);
 };
+
+// Routes
 
 server.router = {
   index: handlers.index,
