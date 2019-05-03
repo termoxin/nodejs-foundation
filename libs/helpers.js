@@ -3,11 +3,13 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const _data = require("./data");
 
 let helpers = {};
-
 helpers.baseDir = path.join(__dirname, "/../templates");
+
+module.exports = helpers;
+
+const _data = require("./data");
 
 helpers.addUniversalTemplate = (name, payload, callback) => {
   helpers.getTemplate("_header", payload, (err, headerData) => {
@@ -173,5 +175,3 @@ helpers.verifyToken = (token, callback) => {
     callback({ error: "The username or token are invalid or empty." });
   }
 };
-
-module.exports = helpers;

@@ -71,8 +71,6 @@ server.requestHandler = (req, res) => {
           ? router.routes[method][pathname]
           : server.notFound;
 
-      console.log();
-
       chosenHandler =
         address.pathname.indexOf("/public") > -1
           ? handlers.public

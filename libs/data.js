@@ -11,10 +11,14 @@ let _data = {};
 
 _data.baseDir = path.join(__dirname, "/../.data");
 
+/**
+ * @TODO Fix circular dependency
+ */
+
 _data.read = (collection, id, callback) => {
   fs.readFile(`${_data.baseDir}/${collection}/${id}.json`, (err, data) => {
     if (!err && data) {
-      data = JSON.parse(data);
+      data = helpers.parseJSONtoObject(data);
       callback(false, data);
     } else {
       callback({
@@ -57,7 +61,7 @@ _data.create = (collection, id, payload, callback) => {
 _data.update = (collection, id, payload, callback) => {
   fs.readFile(`${_data.baseDir}/${collection}/${id}.json`, (err, data) => {
     if (!err && data) {
-      const dataWaitingFor = JSON.parse(data.toString());
+      const dataWaitingFor = helpers.parseJSONtoObject(data.toString());
       let updatedData = { ...dataWaitingFor, ...payload };
 
       updatedData = JSON.stringify(updatedData);
