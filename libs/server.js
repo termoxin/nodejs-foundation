@@ -8,7 +8,7 @@ const config = require("./config");
 const handlers = require("./handlers");
 const helpers = require("./helpers");
 const router = require("./router");
-const routes = require("./routes");
+const routes = require("../routes");
 
 let server = {};
 
@@ -112,7 +112,7 @@ server.init = () => {
 };
 
 server.notFound = (_, callback) => {
-  callback(404);
+  callback(404, "Not found");
 };
 
 module.exports = server;
