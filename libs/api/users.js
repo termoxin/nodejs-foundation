@@ -17,16 +17,20 @@ users.getUser = (data, callback) => {
     _data.isExists("users", username, isExists => {
       if (isExists) {
         _data.read("users", username, (err, userData) => {
-          if (!err && data) {
-            helpers.verifyToken(token, (statusCode, data) => {
-              if (statusCode === 200) {
-                delete userData.password;
+          if (!err && userData) {
+            if (userData.isAdmin) {
+              helpers.verifyToken(token, (statusCode, data) => {
+                if (statusCode === 200) {
+                  delete userData.password;
 
-                callback(200, userData);
-              } else {
-                callback(statusCode, data);
-              }
-            });
+                  callback(200, userData);
+                } else {
+                  callback(statusCode, data);
+                }
+              });
+            } else {
+              callback(403, { error: "Forbidden. You don't have an access." });
+            }
           }
         });
       } else {

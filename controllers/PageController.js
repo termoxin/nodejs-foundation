@@ -10,7 +10,7 @@ PageController.index = (data, callback) => {
 
   helpers.addUniversalTemplate("index", payload, (err, data) => {
     if (!err && data) {
-      callback(200, data, "html", users);
+      callback(200, data, "html");
     }
   });
 };
