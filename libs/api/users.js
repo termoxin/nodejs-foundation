@@ -41,10 +41,11 @@ users.getUser = (data, callback) => {
 };
 
 users.createUser = (data, callback) => {
-  let { username, firstName, lastName, password } = data.body;
+  let { username, firstName, lastName, password, image } = data.body;
 
   username = username && username.trim().length > 3 ? username : false;
   password = password && password.trim().length >= 6 ? password : false;
+  image = image ? image : null;
 
   if (username && firstName && lastName && password) {
     const hash = helpers.hash(password);
@@ -56,7 +57,8 @@ users.createUser = (data, callback) => {
       username,
       firstName,
       lastName,
-      password: hash
+      password: hash,
+      image
     };
 
     _data.isExists("users", username, isExists => {
